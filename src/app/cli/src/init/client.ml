@@ -1008,13 +1008,17 @@ let set_staking_graphql =
   let open Cli_lib.Arg_type in
   let open Graphql_lib in
   let pk_flag =
-    flag "public-key"
-      ~doc:"PUBLICKEY Public key of account with which to produce blocks"
-      (required public_key_compressed)
+    Command.Spec.choose_one ~if_nothing_chosen:`Raise
+      [ flag "public-key"
+          ~doc:"PUBLICKEY Public key of account with which to produce blocks"
+          (optional public_key_compressed)
+        |> Command.Spec.map ~f:(Option.map ~f:(Array.create ~len:1))
+      ; flag "stop-staking" ~doc:"Stop producing blocks" no_arg
+        |> Command.Spec.map ~f:(fun b -> Option.some_if b [||]) ]
   in
   Command.async ~summary:"Start producing blocks"
     (Cli_lib.Background_daemon.graphql_init pk_flag
-       ~f:(fun graphql_endpoint public_key ->
+       ~f:(fun graphql_endpoint public_keys ->
          let print_message msg arr =
            if not (Array.is_empty arr) then
              printf "%s: %s\n" msg
@@ -1024,7 +1028,7 @@ let set_staking_graphql =
          let%map result =
            Graphql_client.query_exn
              (Graphql_queries.Set_staking.make
-                ~public_key:(Encoders.public_key public_key)
+                ~public_keys:(Array.map ~f:Encoders.public_key public_keys)
                 ())
              graphql_endpoint
          in
