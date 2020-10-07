@@ -2,19 +2,22 @@ open Css;
 
 module Colors = {
   let orange = `hex("ff603b");
-  let orangeAlpha = a => `rgba(255,96,59, a);
+  let orangeAlpha = a => `rgba((255, 96, 59, a));
   let mint = `hex("9fe4c9");
   let greyScale = `hex("757575");
   let gray = `hex("d9d9d9");
   let white = Css.white;
   let black = Css.black;
   let digitalBlack = `hex("2d2d2d");
-  let digitalBlackA = a => `rgba(45, 45, 45, a);
+  let digitalBlackA = a => `rgba((45, 45, 45, a));
   let purple = `hex("5362C8");
   let digitalGray = `hex("575757");
   let error = `hex("e93939");
   let status = `hex("ffb13b");
   let codeHighlight = `hex("e9eaf3");
+  let operational = `hex("9FE4C9");
+  let amber = `rgb((242, 149, 68));
+  let amberAlpha = a => `rgba((242, 149, 68, a));
 };
 
 module Typeface = {
@@ -28,10 +31,16 @@ module MediaQuery = {
   let desktop = "(min-width:90rem)";
 
   /** to add a style to tablet and desktop, but not mobile */
-  let notMobile = "(min-width:23.5rem)";
+  let notMobile = "(min-width:48rem)";
 
   /** to add a style just to mobile  */
   let mobile = "(max-width:48rem)";
+};
+
+type backgroundImage = {
+  desktop: string,
+  tablet: string,
+  mobile: string,
 };
 
 /** this function is needed to include the font files with the font styles */
@@ -81,6 +90,7 @@ module Type = {
     style([
       Typeface.monumentGrotesk,
       fontSize(`rem(1.6)),
+      fontWeight(`normal),
       lineHeight(`rem(2.1)),
       color(Colors.digitalBlack),
       media(
@@ -96,6 +106,7 @@ module Type = {
     style([
       Typeface.monumentGroteskMono,
       fontSize(`rem(1.125)),
+      fontWeight(`normal),
       lineHeight(`rem(1.7)),
       textTransform(`uppercase),
       letterSpacing(`em(0.02)),
@@ -182,6 +193,25 @@ module Type = {
       letterSpacing(`px(1)),
     ]);
 
+  let buttonLink =
+    style([
+      Typeface.monumentGrotesk,
+      color(Colors.orange),
+      fontSize(`rem(1.125)),
+      lineHeight(`rem(1.7)),
+      textDecoration(`none),
+      display(`flex),
+      alignItems(`center),
+      cursor(`pointer),
+      unsafe("width", "fit-content"),
+      padding2(~h=`zero, ~v=`rem(0.5)),
+      hover([
+        padding2(~h=`rem(0.8), ~v=`rem(0.5)),
+        color(white),
+        backgroundColor(Colors.digitalBlack),
+      ]),
+    ]);
+
   let contributorLabel =
     style([
       Typeface.monumentGroteskMono,
@@ -197,6 +227,8 @@ module Type = {
       Typeface.monumentGrotesk,
       fontSize(`rem(1.125)),
       lineHeight(`rem(1.7)),
+      textDecoration(`none),
+      cursor(`pointer),
       color(Colors.orange),
       hover([textDecoration(`underline)]),
     ]);
@@ -239,12 +271,12 @@ module Type = {
     ]);
 
   let metadata_ = [
-      Typeface.monumentGroteskMono,
-      fontSize(`px(12)),
-      lineHeight(`rem(1.)),
-      letterSpacing(`em(0.05)),
-      textTransform(`uppercase),
-    ];
+    Typeface.monumentGroteskMono,
+    fontSize(`px(12)),
+    lineHeight(`rem(1.)),
+    letterSpacing(`em(0.05)),
+    textTransform(`uppercase),
+  ];
   let metadata = style(metadata_);
 
   let announcement =
@@ -276,18 +308,21 @@ module Type = {
     ]);
 
   let sectionSubhead_ = [
-      Typeface.monumentGrotesk,
-      fontSize(`rem(1.)),
-      lineHeight(`rem(1.5)),
-      letterSpacing(`px(-1)),
-      color(Colors.digitalBlack),
-      fontWeight(`light),
-      media(
-        MediaQuery.tablet,
-        [fontSize(`rem(1.25)), lineHeight(`rem(1.875))],
-      ),
-    ];
+    Typeface.monumentGroteskMono,
+    fontSize(`rem(1.)),
+    lineHeight(`rem(1.5)),
+    letterSpacing(`px(-1)),
+    color(Colors.digitalBlack),
+    fontWeight(`light),
+    media(
+      MediaQuery.tablet,
+      [fontSize(`rem(1.25)), lineHeight(`rem(1.875))],
+    ),
+  ];
   let sectionSubhead = style(sectionSubhead_);
+
+  let subheadMono =
+    merge([sectionSubhead, style([Typeface.monumentGroteskMono])]);
 
   let paragraph =
     style([
@@ -313,15 +348,15 @@ module Type = {
       ),
     ]);
 
-  let inlineCode_ =[
-      Typeface.monumentGroteskMono,
-      fontSize(`rem(0.9375)),
-      lineHeight(`rem(1.5)),
-      color(Colors.digitalBlack),
-      backgroundColor(Colors.codeHighlight),
-      padding2(~v=`zero, ~h=`rem(0.625)),
-      borderRadius(`px(3))
-    ];
+  let inlineCode_ = [
+    Typeface.monumentGroteskMono,
+    fontSize(`rem(0.9375)),
+    lineHeight(`rem(1.5)),
+    color(Colors.digitalBlack),
+    backgroundColor(Colors.codeHighlight),
+    padding2(~v=`zero, ~h=`rem(0.625)),
+    borderRadius(`px(3)),
+  ];
   let inlineCode = style(inlineCode_);
 
   let paragraphMono =
@@ -333,10 +368,7 @@ module Type = {
       color(Colors.digitalBlack),
       media(
         MediaQuery.tablet,
-        [
-          fontSize(`rem(1.)),
-          lineHeight(`rem(1.5)),
-        ],
+        [fontSize(`rem(1.)), lineHeight(`rem(1.5))],
       ),
     ]);
 
@@ -358,6 +390,15 @@ module Type = {
       Typeface.monumentGroteskMono,
       textTransform(`uppercase),
       fontSize(`rem(1.)),
+    ]);
+
+  let disclaimer =
+    style([
+      Typeface.monumentGrotesk,
+      fontSize(`rem(1.)),
+      lineHeight(`rem(1.5)),
+      opacity(0.5),
+      color(Colors.digitalBlack),
     ]);
 };
 
