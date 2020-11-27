@@ -278,7 +278,10 @@ let setup_daemon logger =
   and proof_level =
     flag "proof-level"
       (optional (Arg_type.create Genesis_constants.Proof_level.of_string))
-      ~doc:"full|check|none"
+      ~doc:
+        "full|check|none Internal, for testing. Start or connect to a network \
+         with full proving (full), snark-testing with dummy proofs (check), \
+         or dummy proofs (none)"
   and plugins = plugin_flag in
   fun () ->
     let open Deferred.Let_syntax in
