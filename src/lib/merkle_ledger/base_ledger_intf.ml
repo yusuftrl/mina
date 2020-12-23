@@ -85,11 +85,9 @@ module type S = sig
 
   val location_of_account : t -> account_id -> Location.t option
 
+  (** This may return an error if the ledger is full. *)
   val get_or_create_account :
     t -> account_id -> account -> ([`Added | `Existed] * Location.t) Or_error.t
-
-  val get_or_create_account_exn :
-    t -> account_id -> account -> [`Added | `Existed] * Location.t
 
   val close : t -> unit
 
