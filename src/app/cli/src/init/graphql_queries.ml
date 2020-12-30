@@ -332,3 +332,15 @@ mutation ($block: PrecomputedBlock!) {
   }
 }
 |}]
+
+module Import_account =
+[%graphql
+{|
+mutation ($path: String!, $password: String!) {
+  importAccount (path: $path, password: $password) {
+    public_key: publicKey @bsDecoder(fn: "Decoders.public_key")
+    already_imported: alreadyImported
+    success
+  }
+}
+|}]
