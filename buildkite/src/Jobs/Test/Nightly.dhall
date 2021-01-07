@@ -20,7 +20,7 @@ Pipeline.build
         S.exactly "buildkite/nightly" "txt"
       ],
       path = "Test",
-      name = "Nightly Test"
+      name = "Nightly"
     },
     steps = [
       DeployNightly.step dependsOn
