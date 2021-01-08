@@ -20,11 +20,9 @@ COMMIT=$(git log -1 --pretty=format:%H)
 if [[ $BASECOMMIT != $COMMIT ]]; then
   # Get the files that have diverged from $BASE
   git diff $BASECOMMIT --name-only
-  >&2 echo "BRANCH 1"
 else
 
   if [ -n "${BUILDKITE_INCREMENTAL+x}" ]; then
-    >&2 echo "BRANCH 2"
     # TODO: remove (temporarily install network tooling)
     apt-get install --yes curl jq
 
@@ -39,7 +37,6 @@ else
   else
     # TODO: Dump commits as artifacts when build succeeds so we can diff against
     # that on develop instead of always running all the tests
-    >&2 echo "BRANCH 3"
     git ls-files
   fi
 fi
