@@ -60,6 +60,35 @@ let dispatch_precomputed_block ?(max_tries = 5)
   in
   go max_tries []
 
+let dispatch_extensional_block ?(max_tries = 5)
+    (archive_location : Host_and_port.t Cli_lib.Flag.Types.with_name)
+    extensional_block =
+  let rec go tries_left errs =
+    if Int.( <= ) tries_left 0 then
+      let e = Error.of_list (List.rev errs) in
+      return
+        (Error
+           (Error.tag_arg e
+              (sprintf
+                 "Could not send extensional block data to archive process \
+                  after %d tries. The process may not be running, please \
+                  check the daemon-argument"
+                 max_tries)
+              ( ("host_and_port", archive_location.value)
+              , ("daemon-argument", archive_location.name) )
+              [%sexp_of: (string * Host_and_port.t) * (string * string)]))
+    else
+      match%bind
+        Daemon_rpcs.Client.dispatch Archive_lib.Rpc.extensional_block
+          extensional_block archive_location.value
+      with
+      | Ok () ->
+          return (Ok ())
+      | Error e ->
+          go (tries_left - 1) (e :: errs)
+  in
+  go max_tries []
+
 let transfer ~logger ~archive_location
     (breadcrumb_reader :
       Transition_frontier.Extensions.New_breadcrumbs.view
