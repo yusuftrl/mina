@@ -21,7 +21,12 @@ in
           ),
           Cmd.runInDocker
             Cmd.Docker::{
-              image = (../Constants/ContainerImages.dhall).codaToolchain
+              image = (../Constants/ContainerImages.dhall).codaToolchain,
+              extraEnv = [
+                "BUILDKITE_GS_APPLICATION_CREDENTIALS_JSON",
+                "AWS_ACCESS_KEY_ID",
+                "AWS_SECRET_ACCESS_KEY"
+              ]
             }
             "./buildkite/scripts/deploy-nightly.sh"
         ],
