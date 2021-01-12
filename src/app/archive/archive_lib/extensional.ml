@@ -19,6 +19,9 @@ module User_command = struct
       top-level Transaction.t
 *)
 
+  ;;
+  o
+
   type t =
     { sequence_no: int
     ; typ: string
